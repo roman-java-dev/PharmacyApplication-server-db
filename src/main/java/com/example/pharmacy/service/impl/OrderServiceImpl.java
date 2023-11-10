@@ -4,6 +4,7 @@ import com.example.pharmacy.model.Customer;
 import com.example.pharmacy.model.Order;
 import com.example.pharmacy.model.ShoppingCart;
 import com.example.pharmacy.repository.OrderRepository;
+import com.example.pharmacy.repository.ShoppingCartRepository;
 import com.example.pharmacy.service.OrderService;
 import com.example.pharmacy.service.ShoppingCartService;
 import lombok.AllArgsConstructor;
@@ -20,18 +21,18 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartService shoppingCartService;
 
     @Override
-    public Order completeOrder(ShoppingCart shoppingCart) {
+    public Order completeOrder(Long customerId) { // TODO ставити умову, якщо в корзині присутні товари
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
-        order.setProducts(shoppingCart.getProducts());
-        order.setCustomer(shoppingCart.getCustomer());
+        order.setProducts(shoppingCartService.findByCustomer(customerId).getProducts());
+        order.setCustomer(shoppingCartService.findByCustomer(customerId).getCustomer());
         orderRepository.save(order);
-        shoppingCartService.clear(shoppingCart);
+        shoppingCartService.clear(customerId);
         return order;
     }
 
     @Override
-    public List<Order> getOrdersHistory(Customer customer) {
-        return orderRepository.findAllByCustomer(customer);
+    public List<Order> getOrdersHistory(Long customerId) {
+        return orderRepository.findAllByCustomer_Id(customerId);
     }
 }

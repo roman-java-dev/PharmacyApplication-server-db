@@ -7,7 +7,7 @@ import com.example.pharmacy.model.ShoppingCart;
 import java.util.List;
 
 public interface OrderService {
-    Order completeOrder(ShoppingCart shoppingCart);
+    Order completeOrder(Long customerId);
 
-    List<Order> getOrdersHistory(Customer customer);
+    List<Order> getOrdersHistory(Long customerId);
 }

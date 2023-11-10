@@ -11,7 +11,7 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Product> products;
     @OneToOne
     private Customer customer;

@@ -3,7 +3,6 @@ package com.example.pharmacy.service.impl;
 import com.example.pharmacy.model.Product;
 import com.example.pharmacy.repository.ProductRepository;
 import com.example.pharmacy.service.ProductService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

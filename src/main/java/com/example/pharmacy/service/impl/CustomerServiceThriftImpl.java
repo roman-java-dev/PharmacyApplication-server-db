@@ -7,11 +7,8 @@ import communication.CustomerServiceThrift;
 import communication.CustomerThrift;
 import communication.InvalidOperationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +55,16 @@ public class CustomerServiceThriftImpl implements CustomerServiceThrift.Iface {
         } catch (RuntimeException e) {
             throw new InvalidOperationException(e.getMessage(), HttpStatus.NOT_FOUND.value());
         }
+    }
+
+    @Override
+    public CustomerThrift findById(long id) throws InvalidOperationException {
+        try {
+            return objectMapper.convertValue(service.findById(id), CustomerThrift.class);
+        } catch (RuntimeException e) {
+            throw new InvalidOperationException("Couldn't find customer by id: " + id, HttpStatus.NOT_FOUND.value());
+        }
+
     }
 
     @Override

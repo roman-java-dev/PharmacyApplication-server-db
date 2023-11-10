@@ -15,6 +15,7 @@ struct CustomerThrift {
 
 service CustomerServiceThrift {
     CustomerThrift add(1: CustomerThrift customerThrift) throws (1:InvalidOperationException e),
+    CustomerThrift findById(1: i64 id) throws (1:InvalidOperationException e),
     list<CustomerThrift> getAll() throws (1:InvalidOperationException e),
     CustomerThrift findByPhoneNumber(1: i64 phoneNumber) throws (1:InvalidOperationException e),
     CustomerThrift findByFirstNameAndLastName(1: string firstName, 2: string lastName) throws (1:InvalidOperationException e),

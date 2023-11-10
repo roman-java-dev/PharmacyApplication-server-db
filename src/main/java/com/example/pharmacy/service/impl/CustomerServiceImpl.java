@@ -33,6 +33,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer findById(Long id) {
+        return customerRepository.getReferenceById(id);
+    }
+
+    @Override
     public List<Customer> getAll() {
         return customerRepository.findAll();
     }
@@ -65,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(Long id) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByCustomer(customerRepository.getReferenceById(id)).orElseThrow(
+        ShoppingCart shoppingCart = shoppingCartRepository.findByCustomer_Id(id).orElseThrow(
                 () -> new RuntimeException("Couldn't delete customer by id: " + id)
         );
         shoppingCartRepository.delete(shoppingCart);
