@@ -5,6 +5,7 @@ import com.example.pharmacy.model.Customer;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerService {
     Customer add(Customer customer);
@@ -14,6 +15,8 @@ public interface CustomerService {
     List<Customer> getAll();
 
     Customer findByPhoneNumber(Long phoneNumber);
+
+    Optional<Customer> findByEmail(String email);
 
     Customer findByFirstNameAndLastName(String firstName, String lastName);
 

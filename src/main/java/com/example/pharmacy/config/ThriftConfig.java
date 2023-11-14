@@ -1,9 +1,6 @@
 package com.example.pharmacy.config;
 
-import communication.CustomerServiceThrift;
-import communication.OrderServiceThrift;
-import communication.ProductServiceThrift;
-import communication.ShoppingCartServiceThrift;
+import communication.*;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
@@ -16,6 +13,7 @@ public class ThriftConfig {
     private final CustomerServiceThrift.Iface customerService;
 	private final ProductServiceThrift.Iface productService;
 	private final ShoppingCartServiceThrift.Iface shoppingCartService;
+	private final AuthenticationServiceThrift.Iface authenticationService;
 	private final OrderServiceThrift.Iface orderService;
 	private final PharmacyProperties config;
 	private final TMultiplexedProcessor processor;
@@ -23,11 +21,13 @@ public class ThriftConfig {
 	private final TServer server;
 
 	public ThriftConfig(CustomerServiceThrift.Iface customerService, ProductServiceThrift.Iface productService,
-						ShoppingCartServiceThrift.Iface shoppingCartService, OrderServiceThrift.Iface orderService,
+						ShoppingCartServiceThrift.Iface shoppingCartService, AuthenticationServiceThrift.Iface authenticationService,
+						OrderServiceThrift.Iface orderService,
 						PharmacyProperties config) throws TTransportException {
 		this.customerService = customerService;
 		this.productService = productService;
 		this.shoppingCartService = shoppingCartService;
+		this.authenticationService = authenticationService;
 		this.orderService = orderService;
 		this.config = config;
 		processor = new TMultiplexedProcessor();
@@ -35,6 +35,7 @@ public class ThriftConfig {
 		processor.registerProcessor(config.service().product(), new communication.ProductServiceThrift.Processor<>(productService));
 		processor.registerProcessor(config.service().shoppingCart(), new communication.ShoppingCartServiceThrift.Processor<>(shoppingCartService));
 		processor.registerProcessor(config.service().order(), new communication.OrderServiceThrift.Processor<>(orderService));
+		processor.registerProcessor(config.service().auth(), new communication.AuthenticationServiceThrift.Processor<>(authenticationService));
 		serverSocket = new TServerSocket(config.port());
 		server = new TSimpleServer(new TServer.Args(serverSocket).processor(processor));
 		System.out.println("Starting the Thrift Server...");

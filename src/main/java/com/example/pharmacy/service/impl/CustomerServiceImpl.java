@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer add(Customer customer) {
         try{
-        customer.setBonus(0);
         Customer newCustomer = customerRepository.save(customer);
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setCustomer(newCustomer);
@@ -47,6 +47,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow(
                 () -> new RuntimeException("Couldn't find customer by phoneNumber: " + phoneNumber)
         );
+    }
+
+    @Override
+    public Optional<Customer> findByEmail(String email) {
+        return customerRepository.findByEmail(email);
     }
 
     @Override

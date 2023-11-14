@@ -19,5 +19,13 @@ public class Customer {
     private String lastName;
     @Column(unique = true)
     private Long phoneNumber;
+    private String email;
+    private String password;
     private Integer bonus;
+    private Role role;
+
+    public enum Role {
+        ADMIN,
+        CUSTOMER
+    }
 }

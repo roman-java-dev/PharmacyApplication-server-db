@@ -7,9 +7,11 @@ import communication.CustomerServiceThrift;
 import communication.CustomerThrift;
 import communication.InvalidOperationException;
 import lombok.RequiredArgsConstructor;
+import org.apache.thrift.TException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,17 +19,6 @@ import java.util.stream.Collectors;
 public class CustomerServiceThriftImpl implements CustomerServiceThrift.Iface {
     private final CustomerService service;
     private final ObjectMapper objectMapper;
-
-    @Override
-    public CustomerThrift add(CustomerThrift customerThrift) throws InvalidOperationException {
-        try {
-            return objectMapper.convertValue(
-                    service.add(objectMapper.convertValue(customerThrift, Customer.class)),
-                    CustomerThrift.class);
-        } catch (RuntimeException e) {
-            throw new InvalidOperationException(e.getMessage(), HttpStatus.NOT_FOUND.value());
-        }
-    }
 
     @Override
     public List<CustomerThrift> getAll() {
@@ -52,6 +43,18 @@ public class CustomerServiceThriftImpl implements CustomerServiceThrift.Iface {
         try {
             return objectMapper.convertValue(service.findByFirstNameAndLastName(firstName, lastName),
                     CustomerThrift.class);
+        } catch (RuntimeException e) {
+            throw new InvalidOperationException(e.getMessage(), HttpStatus.NOT_FOUND.value());
+        }
+    }
+
+    @Override
+    public CustomerThrift findByEmail(String email) throws InvalidOperationException {
+        try {
+            Customer customer = service.findByEmail(email).orElseThrow(
+                    () -> new RuntimeException("We couldn't find a customer with the email address: " + email)
+            );
+            return objectMapper.convertValue(customer, CustomerThrift.class);
         } catch (RuntimeException e) {
             throw new InvalidOperationException(e.getMessage(), HttpStatus.NOT_FOUND.value());
         }
